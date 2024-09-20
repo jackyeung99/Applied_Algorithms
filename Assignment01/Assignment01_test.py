@@ -142,7 +142,7 @@ def test_q9():
         "of",
         "help",
         "Elara"
-    ],
+    ]
     width2 = 15  
     output2 = [
     "Hello     world",

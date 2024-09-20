@@ -189,37 +189,32 @@ def helpElara(words: List[str], width: int) -> List[str]:
     results = []
     line = []
     buffer_length = 0
-    for word in words[:-1]:
-        print(word, len(word))
-        if len(word) + 1 + buffer_length <= width:
-            line.append(word)
-            buffer_length += len(word) + 1
-        else:
+    for word in words:
 
+        if len(word) + len(line) + buffer_length -1 < width:
+            line.append(word)
+            buffer_length += len(word)
+        else:
             filled_line = fill_spaces(line, width)
             results.append(filled_line)
             line = [word]
-            buffer_length = len(word) +1 
+            buffer_length = len(word)
 
-    #clear last line   
-    filled_line = fill_spaces(line, width)
-    results.append(filled_line)
-    # add last word
-    final_word = words[-1] 
-    filled_last = fill_spaces([final_word], width) 
-    results.append(filled_last)
+    last_line = ' '.join(line).ljust(width)
+    results.append(last_line)
 
     print([len(x) for x in results])
+    print(results)  
     return results
 
 def fill_spaces(line, width):
 
-    word_lengths = sum([len(x) for x in line])
+    word_lengths = sum([len(i) for i in line])
     spaces_needed = width - word_lengths
     gaps = len(line) -1 
 
     if gaps == 0:
-        return ' '.join(line).ljust(width)
+        return line[0].ljust(width)
     
    
     spaces_per_gap = spaces_needed // gaps
