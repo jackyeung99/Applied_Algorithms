@@ -1,4 +1,6 @@
 from typing import List
+from collections import deque
+
 
 # ============ Q1 ============
 def treasure_seq(target : List, n : int) -> List:
@@ -35,32 +37,65 @@ class Queue_LL:
     def enqueue(self, val:int)->None:
 
         node = Node(val)
-    
-        if self.head:
-            self.head.next = node
-        else:
+        if self.tail:  
+            self.tail.next = node
+        self.tail = node  
+        if not self.head: 
             self.head = node
 
-    def dequeue(self)->int:
-        if self.head:
-            tmp_node = self.head.next.val
-            self.head = tmp_node
 
+    def dequeue(self)->int:
+        if self.head:  
+            dequeued_value = self.head.val
+            self.head = self.head.next 
+            if not self.head: 
+                self.tail = None
+
+            return dequeued_value
+    
+        return None 
 
 
     # Convert the Queue into an Array and return it
-    def QueueToList(self)->list[int]:
-        
+    def QueueToList(self) -> list[int]:
         arr = []
-        while self.tail:
-            arr.append(self.head)
-            self.head = self.head.tail
+        current = self.head
+        while current:
+            arr.append(current.val)
+            current = current.next
+        return arr
 
 
 
 
 
 # ============ Q3 ============
+def spiritualArithmetic(incantation: list[str]) -> int:
+
+    finalAns = []
+    operations = ["+", "-", "*", "/" ]
+
+    for i in incantation:
+
+        if i in operations:
+            num2 = finalAns.pop()
+            num1 = finalAns.pop()
+
+            if i == "+":
+                val = num1 + num2
+            elif i == "-":
+                val = num1 - num2
+            elif i == "*":
+                val = num1 * num2
+            elif i == "/":
+                val = num1 // num2 
+
+            finalAns.append(val)
+
+        else:
+            finalAns.append(int(i))
+
+    return finalAns.pop()
 
 
 
@@ -83,6 +118,21 @@ def largestArea(blocks: list[int]) -> int:
 
 
     return max_vol
+
+
+# ============ Q5 ============
+def arrangePerformers(nums):
+    sorted_nums = sorted(nums)
+    halve = len(sorted_nums) // 2
+
+    res = [sorted_nums.pop(0)]
+    for i in range(halve):
+        res.append(sorted_nums[halve+i])
+        res.append(sorted_nums[i])
+
+    
+    return res
+
 
 
 # ============ Q6 ============
