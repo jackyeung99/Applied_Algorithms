@@ -82,3 +82,14 @@ def test_q5():
     output = [1, 1001]
 
     assert arrangePerformers(input) == output
+
+
+def test_q6():
+
+    input = "Mg(OH)2"   
+    output = "H2MgO2"
+
+    assert atom_counter(input) == output
+
+
+

@@ -66,9 +66,6 @@ class Queue_LL:
         return arr
 
 
-
-
-
 # ============ Q3 ============
 def spiritualArithmetic(incantation: list[str]) -> int:
 
@@ -123,21 +120,63 @@ def largestArea(blocks: list[int]) -> int:
 # ============ Q5 ============
 def arrangePerformers(nums):
     sorted_nums = sorted(nums)
-    halve = len(sorted_nums) // 2
+    flipped = sorted_nums[::-1]
 
-    res = [sorted_nums.pop(0)]
-    for i in range(halve):
-        res.append(sorted_nums[halve+i])
-        res.append(sorted_nums[i])
-
+    queue = deque()
     
-    return res
+    for i in flipped:
+        if queue:
+            queue.appendleft(queue.pop())
+
+        queue.appendleft(i)
+  
+            
+    return list(queue) 
 
 
 
 # ============ Q6 ============
 
+def atom_counter(formula: str) -> str:
+    
+    count = {}
+    stack = []
 
+    str = []
+    parenthesis = False
+    for char in formula:
+
+        if char.isnumeric():
+            for i in stack:
+                if i in count:
+                    count[i] == char
+                else:
+                    count[i] *= char
+
+        elif char.islower():
+            str.append(char)
+            stack.append(''.join(str))
+            str = []
+
+        elif char == '(':
+            parenthesis = True    
+            
+        elif char == ')':
+            parenthesus = False
+
+        str.append
+
+
+    count.sort()
+    end_str = ''
+    for element, count in count.items():
+        if count == 1:
+            end_str.append(element)
+        else:
+            end_str.append(f"{element}{count}")
+
+
+    return end_str
 # ============ Q7 ============
 
 
