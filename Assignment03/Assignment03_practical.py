@@ -1,5 +1,6 @@
 from typing import List, Optional
 from collections import deque
+from math import factorial
 
 # ============ Q1 ============
 class TreeNode:
@@ -212,8 +213,30 @@ def batmanSignal(n):
 def sacred_seqeunce(keys:int, position:int) -> str:
 # Write your code here
 
-    pass
+    def find_digit(digits, k): 
 
+        if len(digits) == 1:
+            output_str.append(str(digits[0]))
+            return 
+        
+        
+        size = len(digits)
+        print(size)
+        block = factorial(size-1)
+        print(block)
+        location =  position // block
+        print(digits[location])
+        
+        output_str.append(str(digits.pop(location)))
+
+        # find_digit(digits)
+
+        
+
+    
+    output_str = []
+    find_digit([x for x in range(1,keys+1)], position)
+    return ''.join(output_str)
 
 
 # ============ Q9 ============\

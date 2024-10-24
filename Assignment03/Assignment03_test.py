@@ -56,7 +56,13 @@ def test_q7():
     assert batmanSignal(n) == ["yxy","yxx","xyx","xxy","xxx"]
 
 def test_q8():
-    pass
+    n = 3
+    k = 3
+    assert sacred_seqeunce(n,k) == '213'
+
+    n = 4
+    k = 9
+    assert sacred_seqeunce(n,k) == '2314'
 
 def test_q9():
     head = array_to_list([1,2,6,3,4,5,6])
