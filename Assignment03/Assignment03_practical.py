@@ -8,12 +8,27 @@ class TreeNode:
         self.left = left
         self.right = right
 
-def consturct_tree(self, inorder: List[int], postorder: List[int]):
+def construct_tree(inorder: List[int], postorder: List[int]):
     """
     :rtype: TreeNode
     """
     # Your code goes here
-    pass
+
+    if not inorder:
+        return None
+
+    root = TreeNode(postorder.pop())
+    root_id = inorder.index(root.val)
+
+    left_subtree = inorder[:root_id]
+    right_subtree = inorder[root_id+1:]
+    
+    root.right = construct_tree(right_subtree, postorder)
+    root.left = construct_tree(left_subtree,postorder)
+
+    return root
+
+
 
 
 # ============ Q2 ============
@@ -27,34 +42,47 @@ def find_nearest_common_facility(root, storeId1, storeId2):
     # recurse both sides if both stores are on one side go down that side
     # find common ancestor
     
-    def find_common_ancestor(root, storeId1, storeId2):
+    def find_path(root, store):
         if not root:
             return None
 
         # return back location of store up the recursion call
-        if root.id == storeId1 or root.id == storeId2:
-            return root
+        if root.id == store:
+            return [root.id]
         
-        left = find_common_ancestor(root.left, storeId1, storeId2 )
-        right = find_common_ancestor(root.right ,storeId1, storeId2 )
+        # recursively search both sides of the call
+        left_sub = find_path(root.left, store)
+        right_sub = find_path(root.right ,store)
 
-        # assuming that each store is on opposite sides of the subtree meaning this is the closest
-        if left and right:
-            return root
+        # return node path up the recursive call
+        if left_sub: 
+            return [root.id] + left_sub
+        if right_sub:
+            return [root.id] + right_sub
 
-        # move direction of where both stores are located
-        return left if left else right
+        return None
+    
+    path1 = find_path(root, storeId1)
+    path2 = find_path(root, storeId2)
+ 
+    common_ancestor = None
+    for i in range(min(len(path1), len(path2))):
+        if path1[i] == path2[i]:
+            common_ancestor = path1[i]
+        else:
+            break  
 
-    return find_common_ancestor(root, storeId1, storeId2).id
-
+    return common_ancestor
 
 
 
 
 # ============ Q3 ============
-def beautifulNinjaFormation(n: int) -> list[int]:
+
+def beautiful_formation(n):
     pass
-    # return ans
+
+
 
 # ============ Q4 ============
 class NodeWithBuddies:
@@ -90,8 +118,39 @@ def findBuddies(root: NodeWithBuddies) -> None:
 
 # ============ Q5 ============
 def endgameScores(points: list[int]) -> bool:
-    pass
+    # two pointer 
+    # calculate all recursive variations
+    # see if highest score differential is greater than 0 
 
+    def recurse_scores(points, l, r, ronaldo_turn):
+        # Base case: If there is only one game left
+        if l == r:
+            if ronaldo_turn:
+                return points[l]
+            else:
+                return -points[l]
+
+
+        # calculate the highest score differntial for every score permutation
+
+        # Ronaldo's turn
+        if ronaldo_turn:
+            return max(
+                points[l] + recurse_scores(points, l + 1, r, False),
+                points[r] + recurse_scores(points, l, r - 1, False)
+            )
+        # Messi's turn
+        else:
+            return min(
+                -points[l] + recurse_scores(points, l + 1, r, True),
+                -points[r] + recurse_scores(points, l, r - 1, True)
+            )
+
+
+    return recurse_scores(points, 0, len(points) - 1, True) >= 0
+ 
+
+    
 # ============ Q6 ============
 def satisfyingOrders(X: int, k: int) -> int:
     # approach through Dynamic Programmming 
@@ -129,13 +188,33 @@ def satisfyingOrders(X: int, k: int) -> int:
 
 # ============ Q7 ============
 def batmanSignal(n):
-    ans = None
-    return ans 
+    ans = []
+
+    def find_all_comb(str=''):
+
+        if len(str) == n:
+            ans.append(str)
+            return
+
+        # add x and y if previous was x 
+        if len(str) == 0 or  str[-1] == 'x':
+            find_all_comb(str + 'x')
+            find_all_comb(str + 'y')
+        
+        # only add x if y was previous
+        elif str[-1] == 'y':
+            find_all_comb(str + 'x')
+        
+    find_all_comb()
+    return sorted(ans, reverse=True) 
 
 # ============ Q8 ============
 def sacred_seqeunce(keys:int, position:int) -> str:
 # Write your code here
+
     pass
+
+
 
 # ============ Q9 ============\
 class ListNode:
@@ -145,12 +224,58 @@ class ListNode:
 
 
 def removeElements(head: Optional[ListNode], val: int) -> Optional[ListNode]:
-    result = None
-    return result
+    
+    def recurse_ll(head, val):
+
+        if not head:
+            return None
+        
+        head.next = recurse_ll(head.next, val)
+            
+        if head.val == val:
+            return head.next
+        else:
+            return head
+
+
+    result = recurse_ll(head, val)
+    return result if result else None
 
 # ============ Q10 ============
 def rearrangeAllToys(toys):
-    pass
+
+
+    def d_c_alternating(start, end, lessThan):
+        
+        if start == end:
+            return
+        
+        
+        halve = (start + end) // 2
+        
+        # Recur for left half, with alternating patterns
+        d_c_alternating(start, halve, True)  
+        d_c_alternating(halve + 1, end, False)
+        
+     
+        for i in range(start, end, 2):
+            if lessThan:
+                if toys[i] > toys[i + 1]:
+                    toys[i], toys[i + 1] = toys[i + 1], toys[i]
+            else:
+                if toys[i] < toys[i + 1]:
+                    toys[i], toys[i + 1] = toys[i + 1], toys[i]
+
+        
+
+
+
+        
+    d_c_alternating(0, len(toys)-1, True)
+
+    return toys   
+
+
 
 # ============ Q11 ============
 class TreeNode:
@@ -161,7 +286,7 @@ class TreeNode:
 
 def puzzleOfTheTrees(root: TreeNode) -> List[List[int]]:
 
-    # BFS will keep track of row, adding a hyperparement to keep track of columns
+    # use a BFS to keep track of rows and column of node
     def bfs(root, col=0, row=0):
 
         if not root:

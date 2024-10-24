@@ -1,53 +1,6 @@
 import pytest 
 from Assignment03_practical import *
-
-class TreeNode(object):
-  def __init__(self, val=0, left=None, right=None):
-    self.val = val
-    self.left = left
-    self.right = right
-
-def buildTree(elements):
-  if len(elements) == 0:
-    return None
-
-  root_node = TreeNode(elements[0])
-  nodes = [root_node]
-
-  for i, x in enumerate(elements[1:]):
-    if x is None:
-      continue
-    parent_node = nodes[i // 2]
-    is_left = (i % 2 == 0)
-    node = TreeNode(x)
-    if is_left:
-      parent_node.left = node
-    else:
-      parent_node.right = node
-    nodes.append(node)
-
-  return root_node
-
-def buildTree_stores(elements):
-  if len(elements) == 0:
-    return None
-
-  root_node = Store(elements[0])
-  nodes = [root_node]
-
-  for i, x in enumerate(elements[1:]):
-    if x is None:
-      continue
-    parent_node = nodes[i // 2]
-    is_left = (i % 2 == 0)
-    node = Store(x)
-    if is_left:
-      parent_node.left = node
-    else:
-      parent_node.right = node
-    nodes.append(node)
-
-  return root_node
+from boiler_plate_code import *
 
 def test_q1():
     root = buildTree_stores([3, 5, 1, 6, 2, 0, 8, None, None, 7, 4])
@@ -64,13 +17,23 @@ def test_q2():
     pass
 
 def test_q3():
-    pass
+    # n = 4
+    # assert beautiful_formation(n) == [1, 3, 2, 4] 
+
+    n = 5
+    assert beautiful_formation(n) == [1, 5, 3, 2, 4] 
 
 def test_q4():
     pass
 
 def test_q5():
-    pass
+    points = [3, 99, 155, 8]
+    assert endgameScores(points) == True
+
+    points = [5, 1, 100, 1, 5]
+    assert endgameScores(points) == False
+
+
 
 def test_q6():
     X = 4
@@ -89,16 +52,24 @@ def test_q6():
     assert satisfyingOrders(X,k) == 225
 
 def test_q7():
-    pass
+    n = 3 
+    assert batmanSignal(n) == ["yxy","yxx","xyx","xxy","xxx"]
 
 def test_q8():
     pass
 
 def test_q9():
-    pass
+    head = array_to_list([1,2,6,3,4,5,6])
+    assert removeElements(head, 6).val == 1
+
+    head = array_to_list([7,7,7,7])
+    assert removeElements(head, 7) == None
+    
+
 
 def test_q10():
-    pass
+    toys = [1, 5, 1, 1, 6, 4]
+    assert rearrangeAllToys(toys) == [1, 6, 1, 5, 1, 4] 
 
 def test_q11():
     
