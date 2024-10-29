@@ -80,9 +80,17 @@ def find_nearest_common_facility(root, storeId1, storeId2):
 
 # ============ Q3 ============
 
-def beautiful_formation(n):
-    pass
+def beautifulNinjaFormation(n):
 
+    def find_ninjas(n):
+        if n == 1:
+            return [1]
+        elif n == 2:
+            return [1,2]
+    
+        return [2 * x -1  for x in find_ninjas((n+1)//2)] + [2 * x  for x in find_ninjas(n//2)]
+
+    return find_ninjas(n)
 
 
 # ============ Q4 ============
@@ -210,7 +218,7 @@ def batmanSignal(n):
     return sorted(ans, reverse=True) 
 
 # ============ Q8 ============
-def sacred_seqeunce(keys:int, position:int) -> str:
+def sacred_sequence(keys:int, position:int) -> str:
 # Write your code here
 
     def find_digit(digits, k): 
@@ -221,21 +229,22 @@ def sacred_seqeunce(keys:int, position:int) -> str:
         
         
         size = len(digits)
-        print(size)
+        # same as n! / n
         block = factorial(size-1)
-        print(block)
-        location =  position // block
-        print(digits[location])
-        
+        # find what the first digit is 
+        location =  k // block
+               
         output_str.append(str(digits.pop(location)))
 
-        # find_digit(digits)
+        # update k for recursion into next digit permutaitons
+        k %= block
+
+        find_digit(digits, k)
 
         
-
-    
     output_str = []
-    find_digit([x for x in range(1,keys+1)], position)
+    # zero index and input list of integers to n 
+    find_digit([x for x in range(1,keys+1)], position-1)
     return ''.join(output_str)
 
 
@@ -266,37 +275,31 @@ def removeElements(head: Optional[ListNode], val: int) -> Optional[ListNode]:
 
 # ============ Q10 ============
 def rearrangeAllToys(toys):
+    results = []
+    toys.sort()
+        
+    if len(toys) % 2 == 0:
+        halve = len(toys) // 2
+        left = toys[:halve]
+        right = toys[halve:]
+    else:
+        halve = (len(toys) // 2) + 1
+        left = toys[:halve]
+        right = toys[halve:]
+
+    while left and right: 
+        results.append(left.pop())   
+        results.append(right.pop())
+
+    while left:
+        results.append(left.pop())
+    
+    while right:
+        results.append(right.pop())
+
+    return results
 
 
-    def d_c_alternating(start, end, lessThan):
-        
-        if start == end:
-            return
-        
-        
-        halve = (start + end) // 2
-        
-        # Recur for left half, with alternating patterns
-        d_c_alternating(start, halve, True)  
-        d_c_alternating(halve + 1, end, False)
-        
-     
-        for i in range(start, end, 2):
-            if lessThan:
-                if toys[i] > toys[i + 1]:
-                    toys[i], toys[i + 1] = toys[i + 1], toys[i]
-            else:
-                if toys[i] < toys[i + 1]:
-                    toys[i], toys[i + 1] = toys[i + 1], toys[i]
-
-        
-
-
-
-        
-    d_c_alternating(0, len(toys)-1, True)
-
-    return toys   
 
 
 

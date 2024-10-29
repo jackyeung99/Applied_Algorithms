@@ -21,7 +21,7 @@ def test_q3():
     # assert beautiful_formation(n) == [1, 3, 2, 4] 
 
     n = 5
-    assert beautiful_formation(n) == [1, 5, 3, 2, 4] 
+    assert beautifulNinjaFormation(n) == [1, 5, 3, 2, 4] 
 
 def test_q4():
     pass
@@ -58,11 +58,11 @@ def test_q7():
 def test_q8():
     n = 3
     k = 3
-    assert sacred_seqeunce(n,k) == '213'
+    assert sacred_sequence(n,k) == '213'
 
     n = 4
     k = 9
-    assert sacred_seqeunce(n,k) == '2314'
+    assert sacred_sequence(n,k) == '2314'
 
 def test_q9():
     head = array_to_list([1,2,6,3,4,5,6])
@@ -76,6 +76,9 @@ def test_q9():
 def test_q10():
     toys = [1, 5, 1, 1, 6, 4]
     assert rearrangeAllToys(toys) == [1, 6, 1, 5, 1, 4] 
+
+    toys = [1, 3, 2, 2, 3, 1] 
+    assert rearrangeAllToys(toys) == [2, 3, 1, 3, 1, 2] 
 
 def test_q11():
     
