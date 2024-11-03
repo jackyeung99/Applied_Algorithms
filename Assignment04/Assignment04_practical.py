@@ -26,24 +26,26 @@ class Wavelet_Tree:
 
 # ============ Q2 ============
 def palin_break(s: str):
-    # recursive 
-    # use DP 
-
+  
     def is_palindrome(s):
-        return s[::-1] == s 
+        return s == s[::-1]
+
+    # Recursive backtracking function with memoization
+    def recursive_back_track(s, start=0, path=[]):
+
+        if start == len(s):
+            results.append(path[:])  
+            return
+
+        for end in range(start + 1, len(s) + 1):
+            substring = s[start:end]
+            if is_palindrome(substring):
+                path.append(substring)  
+                recursive_back_track(s, end, path) 
+                path.pop() 
 
     results = []
-    # brute force method 
-    for i in range(len(s)+1):
-        for j in range(i+1,len(s)+1):
-        
-            sub_string = s[i:j]
-            if sub_string in results:
-                continue
-
-            if is_palindrome(s[i:j]):
-                results.append(s[i:j])
-                
+    recursive_back_track(s)
     return results
  
 
@@ -54,6 +56,10 @@ def heavenGates(scroll1, scroll2, scroll3):
     # step 1 check if the digits are the same length and containt the same counts
 
     # recursive solution 
+    # def find_all_splits(i1, i2):
+            
+
+
 
     ans = []
     return ans
@@ -62,7 +68,27 @@ def heavenGates(scroll1, scroll2, scroll3):
 
 def magical_recipe(T: int, cases: list[str]) -> list[int]:
     # Implement the logic here to return the result for each test case
+    
+    def count_permutations(string):
+        i=0
+        transformations = 1
+        while i < len(string)-1:
+            if i < len(string) - 2 and (string[i:i+2] == "ab" or string[i:i+2] == "ba"):
+                transformations  *= 2 
+
+                            
+            i += 1
+
+        return transformations
+
+
     result = []
+
+    for i in range(T):
+        string = cases[i]
+        result.append(count_permutations(string) % 998244353)
+
+    # print(result)
     return result
 
 # ============ Q5 ============
