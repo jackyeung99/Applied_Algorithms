@@ -1,26 +1,109 @@
 from typing import List, Tuple
-from collections import deque
+from collections import deque, Counter, defaultdict
 
 import heapq
 
+
 # ============ Q1 ============
 class Node:
-    def __init__(self, data, left = None, right = None):
+    def __init__(self, data, val=None, left = None, right = None):
         self.data = data
+        self.val = val
         self.left = left
         self.right = right
 
 class Wavelet_Tree:
     def __init__(self, A:list[int]=[]):
-        pass
+        self.A = A
+        self.char_bitmap = defaultdict(str)
+        self.root = self.build_tree(A, min(A), max(A))
+
+    def build_tree(self, A, low, high):
+        
+        # found individual item
+        if low == high:
+            freq = ''.join(['X'] * len(A)) 
+            node = Node(freq)
+            node.val = A[0]
+            return node
+
+
+        mid = int((low + high) / 2)
+
+        left_sub_tree, right_sub_tree, bit_vec = [], [], []
+
+        processed = set()
+
+        for num in A:
+            if num <= mid:
+                left_sub_tree.append(num)
+                bit_vec.append('0')
+
+                if num not in processed:
+                    processed.add(num) 
+                    self.char_bitmap[num] += '0'
+            else:
+                right_sub_tree.append(num)
+                bit_vec.append('1')
+
+                if num not in processed:
+                    processed.add(num) 
+                    self.char_bitmap[num] += '1'
+    
+        node = Node(''.join(bit_vec))
+        node.left = self.build_tree(left_sub_tree, low, mid)
+        node.right = self.build_tree(right_sub_tree, mid + 1, high)
+        
+        return node
 
     def get_wavelet_level_order(self):
         # Return level order traversal of the tree.
-        pass
+        if not self.root:
+            return []
+
+        level_order = []
+        queue = deque([self.root])
+        while queue:
+            level = []
+            for _ in range(len(queue)):
+                node = queue.popleft()
+                level.append(node.data)
+
+                if node.left:
+                    queue.append(node.left)
+                if node.right:
+                    queue.append(node.right)
+
+
+            level_order.append(level)
+            
+        # for level in level_order:
+        #     print(level)
+   
+        return level_order
 
     def rank(self, character, position):
-        # Return the rank of the given character in the given position range.
-        pass
+    
+        path = self.char_bitmap[character] 
+
+        node = self.root
+        rank = position
+
+        for char in path:
+            bitmap = node.data
+            if char == '0':
+                node = node.left
+            else:
+                node = node.right
+
+            rank = sum(1 for i in range(rank) if bitmap[i]==char)
+            
+        return rank
+
+            
+
+
+
 
 
 
@@ -53,43 +136,77 @@ def palin_break(s: str):
 
 # ============ Q3 ============
 def heavenGates(scroll1, scroll2, scroll3):
-    # step 1 check if the digits are the same length and containt the same counts
 
-    # recursive solution 
-    # def find_all_splits(i1, i2):
+    # step 1 check if the digits are the same length and containt the same counts
+    if len(scroll1) + len(scroll2) != len(scroll3):
+        return False
+
+    # dynamic programming approach 
+    # Similar to subset sum and approximate string matching 
+
+    dp_arr = [[False for _ in range(len(scroll1)+1)] for _ in range(len(scroll2)+1)]
+    dp_arr[0][0] = True
+
+    # initialize how many elements each scroll independly can cover scroll3
+    for j in range(1, len(scroll1) + 1):
+        dp_arr[0][j] = dp_arr[0][j - 1] and scroll1[j - 1] == scroll3[j - 1]
+
+    for i in range(1, len(scroll2) + 1):
+        dp_arr[i][0] = dp_arr[i - 1][0] and scroll2[i - 1] == scroll3[i - 1]
+
+    for i in range(1, len(scroll2)+1):
+        for j in range(1, len(scroll1)+1):
             
 
+            # check that next element in each scroll is the same as last element in scroll 3
+            # check that all previous elements match as well
+            if dp_arr[i][j-1] and scroll1[j-1] == scroll3[i+j-1]:
+                dp_arr[i][j] = True
+
+            if dp_arr[i-1][j] and scroll2[i-1] == scroll3[i+j-1]:
+                dp_arr[i][j] = True
 
 
-    ans = []
-    return ans
+
+    for arr in dp_arr:
+        print(arr)
+    return dp_arr[-1][-1]
 
 # ============ Q4 ============
 
 def magical_recipe(T: int, cases: list[str]) -> list[int]:
     # Implement the logic here to return the result for each test case
     
-    def count_permutations(string):
-        i=0
-        transformations = 1
-        while i < len(string)-1:
-            if i < len(string) - 2 and (string[i:i+2] == "ab" or string[i:i+2] == "ba"):
-                transformations  *= 2 
 
-                            
-            i += 1
+    def count_paths(string):
+        dp_arr = [0] * (len(string) + 1)
+        dp_arr[0] = 1
+        
+        for i in range(len(string)):
+            # kind of a base cases where we assume step size of 1
+            dp_arr[i + 1] += dp_arr[i] 
 
-        return transformations
+            # simulate a recyursive split 
+            # one path jumps two indexes
+            if i < len(string) - 1 and string[i] == 'a' and string[i + 1] == 'b':
+                # add results to all of the paths from one step
+                dp_arr[i + 2] += dp_arr[i]
 
+            if i < len(string) - 1 and string[i] == 'b' and string[i + 1] == 'a':
+                dp_arr[i + 2] +=  dp_arr[i]
+
+        # print(dp_arr)
+        return dp_arr[-1]
 
     result = []
-
     for i in range(T):
         string = cases[i]
-        result.append(count_permutations(string) % 998244353)
+        result.append(count_paths(string) % 998244353)
 
     # print(result)
     return result
+
+
 
 # ============ Q5 ============
 
@@ -196,7 +313,6 @@ def collect_items(matrix: list[list[int]]) -> int:
     row_size = len(matrix)
     col_size = len(matrix[0])
 
-
     # Find shortest distance from each node to the other
     def bfs(start, target):
         directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]
@@ -223,11 +339,12 @@ def collect_items(matrix: list[list[int]]) -> int:
         return -1, None
 
 
+    items = sorted({cell for row in matrix for cell in row if cell > 0})[1:]
     # find shortest path between consecutive numbers
     path_length = 0
     start = (0,0)
     last = 1
-    for target in range(2, max_item+1):
+    for target in items:
         distance, location = bfs(start, target)
         if distance == -1:
             return -1 
@@ -286,16 +403,48 @@ class Huffman():
         self.source_string = src_str
    
     def generate_codes(self):
-        huffman_codes = {}
-        # Code to generate Huffman codes needs to be written here
-        self.huffman_codes = huffman_codes
+        frequency = Counter(list(self.source_string)) 
+
+        huffman_codes = {k: [] for k, v in frequency.items()}
+        heap = [(freq, char) for char, freq in frequency.items()]
+        heapq.heapify(heap)
+
+        while len(heap) > 1:
+            freq1, char1 = heapq.heappop(heap)
+            freq2, char2 = heapq.heappop(heap)
+
+            for char in char1:
+                huffman_codes[char] = ['0'] + huffman_codes.get(char, [])
+            for char in char2:
+                huffman_codes[char] = ['1'] + huffman_codes.get(char, [])
+
+            combined_freq = freq1 + freq2
+            combined_elem = char1 + char2
+            heapq.heappush(heap, (combined_freq, combined_elem))
+
+
+        print({k: ''.join(v) for k,v in huffman_codes.items()})
+        self.huffman_codes = {k: ''.join(v) for k,v in huffman_codes.items()}
 
     def encode_message(self, message_to_encode):
         encoded_msg = ""
-        # Code to encode the message needs to be written here
+        
+        for char in message_to_encode:
+            encoded_msg += self.huffman_codes[char]
+
+
         return encoded_msg
     
     def decode_message(self, encoded_msg):
-        decoded_msg = ""
-        # Code to decode the message needs to be written here
-        return decoded_msg
+        reverse_codes = {v: k for k, v in self.huffman_codes.items()}
+        
+        decoded_string = ""
+        current_code = ""
+        
+        for bit in encoded_msg:
+            current_code += bit
+            if current_code in reverse_codes:
+                decoded_string += reverse_codes[current_code]
+                current_code = ""  
+        
+        return decoded_string

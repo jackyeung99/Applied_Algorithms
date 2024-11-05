@@ -3,14 +3,25 @@ from Assignment04_practical import *
 
 
 def test_q1():
-    s = 'aab'
-    print(palin_break(s))
+    wv_tree = Wavelet_Tree([6, 2, 0, 7, 7, 9, 3, 1, 8, 5, 4])
+    wv_tree.get_wavelet_level_order()
+    print(wv_tree.rank(7, 4))
 
 
 def test_q2():
-    pass
+    s = 'aab'
+    print(palin_break(s))
+
 def test_q3():
-    pass
+    # s1 = "aabcc"
+    # s2 = "dbbca"
+    # s3 = "aadbbbaccc"
+    # assert not heavenGates(s1, s2, s3)
+
+    s1 = "aacbcc"
+    s2 = "bbbaccaa"
+    s3 = "aacbbbcbacccaa"
+    assert heavenGates(s1, s2, s3)
 
 def test_q4():
     n = 3
@@ -25,7 +36,7 @@ def test_q4():
     n = 1
 
     strings = [ "aababbab"]
-    assert magical_recipe(n, strings) == [16]
+    assert magical_recipe(n, strings) == [15]
 
     n = 1
     strings = [
@@ -33,7 +44,7 @@ def test_q4():
     ]
     assert magical_recipe(n, strings) == [915793674]
 
-    n = 1,
+    n = 1
     strings = [
         "abababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababab"
     ]
@@ -70,10 +81,7 @@ def test_q7():
 
     assert collect_items(matrix) == 27
 
-    
-
-
-
+   
 
 def test_q8():
     s = 'tree'
@@ -89,4 +97,9 @@ def test_q9():
 
 
 def test_q10():
-    pass 
+    coder = Huffman()
+    coder.set_source_string('cbadeeee')
+    coder.generate_codes()
+
+    print(coder.encode_message('ae'))
+    print(coder.decode_message('0100011011'))
